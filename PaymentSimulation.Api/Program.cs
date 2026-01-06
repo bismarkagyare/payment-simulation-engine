@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using PaymentSimulation.Api.Application.Interfaces;
 using PaymentSimulation.Api.Application.Payments;
 using PaymentSimulation.Api.Infra.Persistence;
@@ -8,7 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddControllers();
+builder
+    .Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        //serialize enums as strings instead of integers
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 // Dependency injection
