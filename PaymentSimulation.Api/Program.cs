@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services.AddControllers();
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 // Dependency injection
 builder.Services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
