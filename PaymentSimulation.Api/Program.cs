@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using PaymentSimulation.Api.Application.Interfaces;
 using PaymentSimulation.Api.Application.Payments;
 using PaymentSimulation.Api.Infra.Persistence;
+using PaymentSimulation.Api.Infra.Queue;
 using PaymentSimulation.Api.Middleware;
+using PaymentSimulation.Api.Workers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +41,8 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 // Dependency injection
 builder.Services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
 builder.Services.AddScoped<PaymentService>();
+builder.Services.AddSingleton<InMemoryQueue>();
+builder.Services.AddHostedService<PaymentProcessWorker>();
 
 var app = builder.Build();
 
