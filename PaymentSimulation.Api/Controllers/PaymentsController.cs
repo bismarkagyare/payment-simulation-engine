@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using PaymentSimulation.Api.Application.Interfaces;
 using PaymentSimulation.Api.Application.Payments;
 using PaymentSimulation.Api.Domain.Payments;
 using PaymentSimulation.Api.Dtos.Requests;
 using PaymentSimulation.Api.Dtos.Responses;
+using PaymentSimulation.Api.Infra.Queue;
 
 namespace PaymentSimulation.Api.Controllers;
 
@@ -10,9 +12,9 @@ namespace PaymentSimulation.Api.Controllers;
 [Route("api/[controller]")]
 public class PaymentsController : ControllerBase
 {
-    private readonly PaymentService _paymentService;
+    private readonly IPaymentService _paymentService;
 
-    public PaymentsController(PaymentService paymentService)
+    public PaymentsController(IPaymentService paymentService, InMemoryQueue queue)
     {
         _paymentService = paymentService;
     }
@@ -21,6 +23,9 @@ public class PaymentsController : ControllerBase
     public ActionResult<PaymentResponse> CreatePayment(CreatePaymentRequest request)
     {
         var payment = _paymentService.CreatePayment(request.Amount, request.Method);
+
+        //_queue.Enqueue(payment.Id);
+
         return Ok(ToResponse(payment));
     }
 
