@@ -26,14 +26,32 @@ public class Payment
         };
     }
 
+    public void MarkProcessing()
+    {
+        if (Status != PaymentStatus.Pending)
+        {
+            return;
+        }
+        Status = PaymentStatus.Processing;
+        CompletedAtUtc = DateTime.UtcNow;
+    }
+
     public void MarkSucceeded()
     {
+        if (Status != PaymentStatus.Processing)
+        {
+            return;
+        }
         Status = PaymentStatus.Suceeded;
         CompletedAtUtc = DateTime.UtcNow;
     }
 
     public void MarkFailed()
     {
+        if (Status != PaymentStatus.Processing)
+        {
+            return;
+        }
         Status = PaymentStatus.Failed;
         CompletedAtUtc = DateTime.UtcNow;
     }
