@@ -17,4 +17,9 @@ public class InMemoryPaymentRepository : IPaymentRepository
         _payments.TryGetValue(id, out var payment);
         return payment;
     }
+
+    public void Update(Payment payment)
+    {
+        _payments[payment.Id] = payment;
+    }
 }

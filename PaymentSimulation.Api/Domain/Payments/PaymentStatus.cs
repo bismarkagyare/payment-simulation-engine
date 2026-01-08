@@ -2,9 +2,11 @@ namespace PaymentSimulation.Api.Domain.Payments;
 
 public enum PaymentStatus
 {
-    Pending = 0,
+    Pending,
 
-    Suceeded = 1,
+    Processing,
 
-    Failed = 2,
+    Suceeded,
+
+    Failed,
 }
