@@ -1,25 +1,28 @@
 using PaymentSimulation.Api.Application.Interfaces;
 using PaymentSimulation.Api.Domain.Payments;
+using PaymentSimulation.Api.Infra.Queue;
 
 namespace PaymentSimulation.Api.Application.Payments;
 
 public class PaymentService
 {
     private readonly IPaymentRepository _paymentRepository;
-    private readonly Random _random = new();
 
-    public PaymentService(IPaymentRepository paymentRepository)
+    private readonly InMemoryQueue _queue;
+
+    public PaymentService(IPaymentRepository paymentRepository, InMemoryQueue queue)
     {
         _paymentRepository = paymentRepository;
+        _queue = queue;
     }
 
     public Payment CreatePayment(decimal amount, PaymentMethod method)
     {
         var payment = Payment.Create(amount, method);
 
-        ProcessPayment(payment);
-
         _paymentRepository.Add(payment);
+
+        _queue.Enqueue(payment.Id);
 
         return payment;
     }
@@ -29,18 +32,18 @@ public class PaymentService
         return _paymentRepository.GetById(id);
     }
 
-    private void ProcessPayment(Payment payment)
-    {
-        // 80% chance of success
-        var isSuccessful = _random.Next(1, 101) <= 80;
+    // private void ProcessPayment(Payment payment)
+    // {
+    //     // 80% chance of success
+    //     var isSuccessful = _random.Next(1, 101) <= 80;
 
-        if (isSuccessful)
-        {
-            payment.MarkSucceeded();
-        }
-        else
-        {
-            payment.MarkFailed();
-        }
-    }
+    //     if (isSuccessful)
+    //     {
+    //         payment.MarkSucceeded();
+    //     }
+    //     else
+    //     {
+    //         payment.MarkFailed();
+    //     }
+    // }
 }
