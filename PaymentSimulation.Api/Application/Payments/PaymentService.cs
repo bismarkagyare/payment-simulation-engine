@@ -4,7 +4,7 @@ using PaymentSimulation.Api.Infra.Queue;
 
 namespace PaymentSimulation.Api.Application.Payments;
 
-public class PaymentService
+public class PaymentService : IPaymentService
 {
     private readonly IPaymentRepository _paymentRepository;
 
@@ -16,7 +16,7 @@ public class PaymentService
         _queue = queue;
     }
 
-    public Payment CreatePayment(decimal amount, PaymentMethod method)
+    public Payment CreatePayment(long amount, PaymentMethod method)
     {
         var payment = Payment.Create(amount, method);
 
