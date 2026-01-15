@@ -10,6 +10,12 @@ public class Payment
 
     public PaymentStatus Status { get; private set; }
 
+    public int RetryCount { get; private set; } = 0;
+
+    public int MaxRetries { get; private set; } = 3;
+
+    public WebhookStatus WebhookStatus { get; private set; } = WebhookStatus.Pending;
+
     public DateTime CreatedAtUtc { get; private set; }
 
     public DateTime? CompletedAtUtc { get; private set; }
@@ -54,5 +60,30 @@ public class Payment
         }
         Status = PaymentStatus.Failed;
         CompletedAtUtc = DateTime.UtcNow;
+    }
+
+    public void IncrementRetry()
+    {
+        RetryCount++;
+    }
+
+    public bool CanRetry()
+    {
+        return RetryCount < MaxRetries;
+    }
+
+    public void MarkWebhookSent()
+    {
+        WebhookStatus = WebhookStatus.Suceeded;
+    }
+
+    public void MarkWebhookFailed()
+    {
+        WebhookStatus = WebhookStatus.Failed;
+    }
+
+    public void MarkWebhookDead()
+    {
+        WebhookStatus = WebhookStatus.Dead;
     }
 }
