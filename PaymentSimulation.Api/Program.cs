@@ -43,6 +43,7 @@ builder.Services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddSingleton<InMemoryQueue>();
 builder.Services.AddHostedService<PaymentProcessWorker>();
+builder.Services.AddHostedService<WebhookWorker>();
 
 var app = builder.Build();
 
