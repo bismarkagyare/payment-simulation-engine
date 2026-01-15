@@ -40,7 +40,7 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 // Dependency injection
 builder.Services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
-builder.Services.AddScoped<PaymentService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddSingleton<InMemoryQueue>();
 builder.Services.AddHostedService<PaymentProcessWorker>();
 
