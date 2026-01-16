@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using PaymentSimulation.Api.Application.Interfaces;
 using PaymentSimulation.Api.Application.Payments;
+using PaymentSimulation.Api.Config;
 using PaymentSimulation.Api.Infra.Persistence;
 using PaymentSimulation.Api.Infra.Queue;
 using PaymentSimulation.Api.Middleware;
@@ -37,17 +38,29 @@ builder
     });
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddLogging();
+builder.Services.Configure<WebhookOptions>(builder.Configuration.GetSection("Webhook"));
 
 // Dependency injection
 builder.Services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddSingleton<InMemoryQueue>();
-builder.Services.AddHostedService<PaymentProcessWorker>();
-builder.Services.AddHostedService<WebhookWorker>();
+
+// Register workers so we can retrieve them for wiring
+builder.Services.AddSingleton<PaymentProcessWorker>();
+builder.Services.AddSingleton<WebhookWorker>();
+
+// Register as hosted services
+builder.Services.AddHostedService(sp => sp.GetRequiredService<PaymentProcessWorker>());
+builder.Services.AddHostedService(sp => sp.GetRequiredService<WebhookWorker>());
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Wire up webhook queue between workers after app is built
+var paymentWorker = app.Services.GetRequiredService<PaymentProcessWorker>();
+var webhookWorker = app.Services.GetRequiredService<WebhookWorker>();
+webhookWorker.SetWebhookQueue(paymentWorker.WebhookQueue);
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -55,7 +68,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<IdempotencyMiddleware>();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
