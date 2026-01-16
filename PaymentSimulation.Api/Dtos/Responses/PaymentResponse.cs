@@ -8,4 +8,8 @@ public class PaymentResponse
     public decimal Amount { get; set; }
     public PaymentMethod Method { get; set; }
     public PaymentStatus Status { get; set; }
+
+    public WebhookStatus WebhookStatus { get; set; }
+
+    public int RetryCount { get; set; }
 }

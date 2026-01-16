@@ -14,7 +14,7 @@ public class PaymentsController : ControllerBase
 {
     private readonly IPaymentService _paymentService;
 
-    public PaymentsController(IPaymentService paymentService, InMemoryQueue queue)
+    public PaymentsController(IPaymentService paymentService)
     {
         _paymentService = paymentService;
     }
@@ -48,6 +48,8 @@ public class PaymentsController : ControllerBase
             Amount = payment.Amount,
             Method = payment.Method,
             Status = payment.Status,
+            WebhookStatus = payment.WebhookStatus,
+            RetryCount = payment.RetryCount,
         };
     }
 }

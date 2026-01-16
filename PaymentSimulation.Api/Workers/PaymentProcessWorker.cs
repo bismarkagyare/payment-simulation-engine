@@ -28,6 +28,8 @@ public class PaymentProcessWorker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogInformation("PaymentProcessWorker started");
+
         while (!stoppingToken.IsCancellationRequested)
         {
             //if there are no payments to process
