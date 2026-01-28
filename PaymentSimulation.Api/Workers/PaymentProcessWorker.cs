@@ -7,11 +7,8 @@ namespace PaymentSimulation.Api.Workers;
 public class PaymentProcessWorker : BackgroundService
 {
     private readonly InMemoryQueue _processQueue;
-
     private readonly InMemoryQueue _webhookQueue;
-
     private readonly IPaymentRepository _paymentRepository;
-
     private readonly ILogger<PaymentProcessWorker> _logger;
 
     public PaymentProcessWorker(

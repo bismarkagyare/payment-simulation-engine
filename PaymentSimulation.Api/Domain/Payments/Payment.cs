@@ -48,7 +48,7 @@ public class Payment
         {
             return;
         }
-        Status = PaymentStatus.Suceeded;
+        Status = PaymentStatus.Succeeded;
         CompletedAtUtc = DateTime.UtcNow;
     }
 

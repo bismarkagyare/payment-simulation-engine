@@ -6,7 +6,7 @@ public enum PaymentStatus
 
     Processing,
 
-    Suceeded,
+    Succeeded,
 
     Failed,
 }
