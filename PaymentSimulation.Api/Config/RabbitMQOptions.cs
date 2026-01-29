@@ -8,6 +8,8 @@ public class RabbitMQOptions
     public string UserName { get; set; } = "guest";
     public string Password { get; set; } = "guest";
     public string VirtualHost { get; set; } = "/";
+
+    //exchange is the rabbitmq routing engine:decide which queue should receive a msg
     public string ExchangeName { get; set; } = "payments.exchange";
     public string ProcessQueueName { get; set; } = "payment.process";
     public string WebhookQueueName { get; set; } = "payment.webhook";
